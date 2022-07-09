@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Christian basic</title>
+  <link rel="stylesheet" href="styles.css">
+  <style type="text/css">
+
+  </style>
+  
+  </head>
+  <body>
+
+    <div id="cy"></div>
+    <div id="editorframe">
+      <div id="editorcommands">commands</div>
+      <div id="editor" contenteditable="true">editor</div>
+      <div id="editorlinks">
+       
+      </div>
+      <div id="editorcommit">
+        <input type="button" value="Save text" onclick="setNodeText(selected_node, getEditorText())">
+        <!-- print(getEditorText()) -->
+      </div>
+    </div>
+
+  </body>
+</html>
+
+<!-- <script src="js/jquery-3.4.1.min.js"></script> -->
+<script src="js/cytoscape.min.js"></script>
+<script src="js/elements.js"></script>
+<!-- <script src="js/dagre.js"></script> -->
+<!-- <script src="js/cytoscape-dagre.js"></script> -->
+<script src="js/editor.js"></script>
+
+
+
+
+<script type="text/javascript">
+  function print(message){console.log(message)}
+
+  // to start using editor
+  editor(
+    document.getElementById("editor"),
+    document.getElementById("editorlinks")
+  );
+
+  var cy = cytoscape({
+
+    container: document.getElementById('cy'), // container to render in
+
+    style: [ // the stylesheet for the graph
+      {
+        selector: 'node',
+        style: {
+          'background-color': '#666',
+          'label': 'data(name)'
+        }
+      },
+      {
+        selector: 'node:selected',
+        style: {
+                'border-width'		: '2',
+                'border-color'		: 'black',
+                // 'border-opacity'	: '1',
+                'background-color'	: '#E8762C',
+                'text-outline-color': '#394850'
+        }
+      },
+      {
+        selector: 'edge',
+        style: {
+          'width': 3,
+          'line-color': '#ccc',
+          'target-arrow-color': '#ccc',
+          'target-arrow-shape': 'triangle',
+          'curve-style': 'bezier',
+          'label': 'data(name)'
+        }
+      }
+    ],
+  });
+
+  cy.add(ellies);
+  var layout = cy.layout({
+    name: 'random'
+    // name: 'dagre'
+  });
+
+  layout.run();
+
+  var selected_node;
+
+  cy.on('tap', 'node', function(evt){
+    var node = evt.target;
+    selected_node = node;
+    setEditorText(getNodeText(node)); 
+
+    //get all edges coming from the selected node.
+    var raw_edge_arr = cy.edges('[source = "' + node.id() + '"]');
+
+    var edge_data_arr = getEdgeInfo(raw_edge_arr);
+
+    setEditorLinks(edge_data_arr);
+
+  });
+
+
+
+function getNodeText(node){
+  return node._private.data.body;
+}
+
+function setNodeText(node, text) {
+  node._private.data.body = text;
+}
+
+function getEdgeInfo(edgearr){
+  var return_arr = []
+
+  for (var i=0; i<edgearr.length; i++){
+    return_arr.push({
+      'id': edgearr[i].id(),
+      'source': edgearr[i]._private.data.source,
+      'target': edgearr[i]._private.data.target,
+      'name': edgearr[i]._private.data.name
+    //  { data: { id: '0', source: 'n1', target: 'n2', name: "Go East" } },
+    });  
+  }
+  return return_arr;
+}
+
+
+</script>
+

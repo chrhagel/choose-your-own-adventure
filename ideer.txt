@@ -1,0 +1,44 @@
+Graph
+
+next up
+	Edit title of links in editor
+		save to graph elements. 
+			it doesnt make sense to have two save buttons. Instead have just the choices be editable and when you click away, save. This is the auto save. 
+		Refactor the links to be just editable. 
+		Then write a save thingy from index
+		then make it called on defcous. 
+
+	Add link to existing node 
+		click button
+		set state in graph that selection is for link
+		create link and save it
+		Reload graph
+	Add link to new node
+		click button
+		add new link and reload graph
+		then you can change title. 
+
+
+Backlog
+	Editor: add auto-save
+	Editor: Formatting buttons
+	Add nodes
+		from links in file
+	Graph: delete node
+	Editor: add / edit links
+	Game: character with stats
+	Editor: show character stats
+	Game: compile to play version
+	App: save file, load file. 
+
+
+
+der er et link til en side
+en side har text og actions. 
+
+Vi er også nødt til at have en karakter med stats 
+
+Det er kun til at skrive i, ikke til at spille i. Så der skal være em text editor på siden
+
+Hver side har en title, text, og choices. 
+Hvert choice har et navn og et link til en side 
