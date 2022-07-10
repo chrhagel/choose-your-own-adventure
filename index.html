@@ -18,8 +18,7 @@
        
       </div>
       <div id="editorcommit">
-        <input type="button" value="Save text" onclick="setNodeText(selected_node, getEditorText(), getEditorLinks())">
-        <!-- print(getEditorText()) -->
+        <input type="button" value="Save text" onclick="saveUpdates()">
       </div>
     </div>
 
@@ -32,9 +31,6 @@
 <!-- <script src="js/dagre.js"></script> -->
 <!-- <script src="js/cytoscape-dagre.js"></script> -->
 <script src="js/editor.js"></script>
-
-
-
 
 <script type="text/javascript">
   function print(message){console.log(message)}
@@ -83,7 +79,8 @@
 
   cy.add(ellies);
   var layout = cy.layout({
-    name: 'random'
+    name: 'grid'
+    // name: 'random'
     // name: 'dagre'
   });
 
@@ -106,6 +103,10 @@
   });
 
 
+function saveUpdates(){
+  setNodeText(selected_node, getEditorText());
+  setEdgeText();
+}
 
 function getNodeText(node){
   return node._private.data.body;
@@ -113,6 +114,14 @@ function getNodeText(node){
 
 function setNodeText(node, text) {
   node._private.data.body = text;
+}
+
+function setEdgeText(){
+  var linkdata = getEditorLinks() //Array[{ data: { id: '0', source: 'n1', target: 'n2', text: "Go East" } }]
+  for (var i=0; i<linkdata.length; i++){
+    var edge = cy.getElementById(linkdata[i].id);
+    edge._private.data.name = linkdata[i].text;
+  }
 }
 
 function getEdgeInfo(edgearr){
@@ -129,7 +138,5 @@ function getEdgeInfo(edgearr){
   }
   return return_arr;
 }
-
-
 </script>
 

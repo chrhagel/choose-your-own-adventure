@@ -27,7 +27,7 @@ function setEditorLinks(edge_data_arr){
   editorlinks.innerHTML = html_str;
 }
 
- // returns edge info Array[{ data: { id: '0', source: 'n1', target: 'n2', text: "Go East" } }],
+ // returns edge info Array[{ data: { id: '0', source: 'n1', target: 'n2', text: "Go East" } }]
 function getEditorLinks(){
   var return_arr = []
   for (var i=0; i<editorlinks.children.length; i++){
