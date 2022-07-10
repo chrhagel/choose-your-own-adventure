@@ -14,46 +14,31 @@ function getEditorText(){
   return editor.innerHTML;
 }
 
-var current_source = '';
-var link_ids = [];
 function setEditorLinks(edge_data_arr){
-  link_ids = [];
   var html_str ='';
   for (var i = 0; i < edge_data_arr.length; i++) {
-    current_source = edge_data_arr[i].source;
-    var new_id = 'link_' + edge_data_arr[i].target;
-    link_ids.push(new_id);
-
     html_str += 
-    '<div id="'+ new_id +'"> \
-      <span id="editor" contenteditable="true" >'+ edge_data_arr[i].name +'</span> \
+    '<div id="'+ edge_data_arr[i].id +'"> \
+      <span id="name" contenteditable="true" >'+ edge_data_arr[i].name +'</span> \
+      <span id="'+ edge_data_arr[i].target +'"> linking to '+ edge_data_arr[i].target +' </span> \
+      <span id="'+ edge_data_arr[i].source +'" class="notVisible"> source </span> \
     </div>';
-
-    // html_str += 
-    // '<div id="'+ new_id +'"> <span class>'+ edge_data_arr[i].name +'</span> \
-    // <input type="button" value="Edit choice" class onclick="toggleVisibility('+ new_id +')"> \
-    // <span id="editor" contenteditable="true" class="notVisible">'+ edge_data_arr[i].name +'</span> \
-    // <input type="button" value="Save change" class="notVisible" onclick="saveChoiceName('+ new_id+'), toggleVisibility('+ new_id+')"> \
-    // <input type="button" value="Discard change" class="notVisible" onclick="toggleVisibility('+ new_id +')"></div>';
-
-
-
-
   }
   editorlinks.innerHTML = html_str;
 }
 
-// function getEditorLinks(){}
+ // returns edge info Array[{ data: { id: '0', source: 'n1', target: 'n2', text: "Go East" } }],
+function getEditorLinks(){
+  var return_arr = []
+  for (var i=0; i<editorlinks.children.length; i++){
+    var data = {};
+    data['id'] = editorlinks.children[i].getAttribute("id");
+    data['source'] = editorlinks.children[i].children[2].getAttribute("id");
+    data['target'] = editorlinks.children[i].children[1].getAttribute("id");
+    data['text'] = editorlinks.children[i].children[0].innerHTML;
 
-
-function toggleVisibility(root_el){
-  for (let i=0; i<root_el.children.length; i++) {
-    root_el.children[i].classList.toggle("notVisible");
+    return_arr.push(data);
   }
-}
-
-function saveChoiceName(root_el){
-  // console.log(root_el.children[0])
-  root_el.children[0].innerHTML = root_el.children[2].innerHTML;
+  return return_arr;
 }
 
