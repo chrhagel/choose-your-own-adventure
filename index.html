@@ -18,6 +18,8 @@
        
       </div>
       <div id="editorcommit">
+        <input type="button" value="Add link to existing node" onclick="addLinkToExistingNode()"> 
+        <input type="button" value="Add link to new node" onclick="addLinkToNewNode()"> 
         <input type="button" value="Save text" onclick="saveUpdates()">
       </div>
     </div>
@@ -78,30 +80,38 @@
   });
 
   cy.add(ellies);
-  var layout = cy.layout({
-    name: 'grid'
-    // name: 'random'
-    // name: 'dagre'
-  });
 
-  layout.run();
+  setAndUpdateLayout();
 
+  // general utils adn setup 
+  function setAndUpdateLayout(){
+    var layout = cy.layout({
+      name: 'grid'
+      // name: 'random'
+      // name: 'dagre'
+    });
+
+    layout.run();
+  }
+
+
+  // control flowish
   var selected_node;
-
   cy.on('tap', 'node', function(evt){
     var node = evt.target;
     selected_node = node;
     setEditorText(getNodeText(node)); 
 
-    //get all edges coming from the selected node.
-    var raw_edge_arr = cy.edges('[source = "' + node.id() + '"]');
-
-    var edge_data_arr = getEdgeInfo(raw_edge_arr);
-
-    setEditorLinks(edge_data_arr);
-
+    updateEditorLinks();
+  
   });
 
+function updateEditorLinks(){
+  //get all edges coming from the selected node.
+  var raw_edge_arr = cy.edges('[source = "' + selected_node.id() + '"]');
+  var edge_data_arr = getEdgeInfo(raw_edge_arr);
+  setEditorLinks(edge_data_arr);
+}
 
 function saveUpdates(){
   setNodeText(selected_node, getEditorText());
@@ -138,5 +148,29 @@ function getEdgeInfo(edgearr){
   }
   return return_arr;
 }
+
+function addLinkToExistingNode(){
+
+}
+
+function addLinkToNewNode(){
+  // find last node and edge and get their ids. Incement by one. 
+  var new_node_id = String('n' + (parseInt(cy.nodes().last().id().slice(1)) + 1));
+	var new_edge_id = String('e' + (parseInt(cy.edges().last().id().slice(1)) + 1));
+
+  cy.add([
+    {group: 'nodes', 
+      data: { id: new_node_id, name:"new page", body:"Body text" }
+    },
+    { group: 'edges', 
+      data: { id: new_edge_id, source: selected_node.id(), target: new_node_id, name: 'new choice' } 
+    }
+	]);
+
+  updateEditorLinks();
+  setAndUpdateLayout();
+
+}
+
 </script>
 
