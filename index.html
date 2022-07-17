@@ -83,7 +83,7 @@
 
   setAndUpdateLayout();
 
-  // general utils adn setup 
+  // general utils and setup 
   function setAndUpdateLayout(){
     var layout = cy.layout({
       name: 'grid'
@@ -97,14 +97,29 @@
 
   // control flowish
   var selected_node;
+  var temp_node;
+  var mode_add_link_to_existing_node = false;
   cy.on('tap', 'node', function(evt){
-    var node = evt.target;
-    selected_node = node;
-    setEditorText(getNodeText(node)); 
-
-    updateEditorLinks();
-  
+    if (mode_add_link_to_existing_node == true) {
+      var node = evt.target;
+      temp_node = node;
+      addLinkToExistingNode_helper(node);
+      mode_add_link_to_existing_node = false;
+      //no clue why I have to use this delay function
+      // however, if I don't, it doesn't work. so...
+      setTimeout(resetSelection, 10); 
+    } else {
+      selected_node = evt.target;
+      setEditorText(getNodeText(selected_node)); 
+      updateEditorLinks();
+    }
   });
+
+function resetSelection(){
+  cy.$(temp_node).unselect();
+  cy.$(selected_node).select(); 
+}
+
 
 function updateEditorLinks(){
   //get all edges coming from the selected node.
@@ -116,6 +131,7 @@ function updateEditorLinks(){
 function saveUpdates(){
   setNodeText(selected_node, getEditorText());
   setEdgeText();
+  // setAndUpdateLayout(); doesnt work/   
 }
 
 function getNodeText(node){
@@ -150,8 +166,24 @@ function getEdgeInfo(edgearr){
 }
 
 function addLinkToExistingNode(){
-
+  mode_add_link_to_existing_node = true;
 }
+
+function addLinkToExistingNode_helper(node){
+  // get latest edge id and increment.
+  var new_edge_id = String('e' + (parseInt(cy.edges().last().id().slice(1)) + 1));
+  // Add new edge to the new node
+  cy.add([
+    { group: 'edges',
+      data:  {id: new_edge_id, source: selected_node.id(), target: node.id(), name: 'new choice'} 
+    }
+  ]);
+
+  updateEditorLinks();
+  setAndUpdateLayout();
+  
+}
+
 
 function addLinkToNewNode(){
   // find last node and edge and get their ids. Incement by one. 

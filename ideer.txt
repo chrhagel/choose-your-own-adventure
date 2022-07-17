@@ -11,6 +11,7 @@ next up
 
 
 Backlog
+	Editor: save text needs to update graph. 
 	Editor: add auto-save
 	Editor: make it so you can edit node name
 	nodes: add title and body
