@@ -1,20 +1,12 @@
 Graph
 
 next up
-	Add link to existing node 
-		click button
-		set state in graph that selection is for link
-		create link and save it
-		Reload graph
-
-		add a new edge with source = selected node and target = newly selected node. 
-
+	nodes: Show the node name and make it editable
 
 Backlog
-	Editor: save text needs to update graph. 
+	Editor: save text needs to update node and edge titles.  
 	Editor: add auto-save
 	Editor: make it so you can edit node name
-	nodes: add title and body
 	Editor: Formatting buttons
 	Graph: delete node
 	Game: character with stats

@@ -12,11 +12,17 @@
 
     <div id="cy"></div>
     <div id="editorframe">
-      <div id="editorcommands">commands</div>
-      <div id="editor" contenteditable="true">editor</div>
+      <!-- editorcommands is an area reserved for commands like bold, italics, pick font type, and similar. -->
+      <div id="editorcommands"> </div>
+
+      <!-- Main text area -->
+      <div id="editor" contenteditable="true"> <i>click on a circle (node) to get text here</i></div>
+
+      <!-- Area for the links between nodes. Links are called 'edges' in graphs. -->
       <div id="editorlinks">
        
       </div>
+      <!-- It would probably make more sense to move these buttons to the command area but oh well  -->
       <div id="editorcommit">
         <input type="button" value="Add link to existing node" onclick="addLinkToExistingNode()"> 
         <input type="button" value="Add link to new node" onclick="addLinkToNewNode()"> 
@@ -30,8 +36,8 @@
 <!-- <script src="js/jquery-3.4.1.min.js"></script> -->
 <script src="js/cytoscape.min.js"></script>
 <script src="js/elements.js"></script>
-<!-- <script src="js/dagre.js"></script> -->
-<!-- <script src="js/cytoscape-dagre.js"></script> -->
+<script src="js/dagre.js"></script>
+<script src="js/cytoscape-dagre.js"></script>
 <script src="js/editor.js"></script>
 
 <script type="text/javascript">
@@ -86,9 +92,9 @@
   // general utils and setup 
   function setAndUpdateLayout(){
     var layout = cy.layout({
-      name: 'grid'
+      // name: 'grid'
       // name: 'random'
-      // name: 'dagre'
+      name: 'dagre'
     });
 
     layout.run();
@@ -146,7 +152,8 @@ function setEdgeText(){
   var linkdata = getEditorLinks() //Array[{ data: { id: '0', source: 'n1', target: 'n2', text: "Go East" } }]
   for (var i=0; i<linkdata.length; i++){
     var edge = cy.getElementById(linkdata[i].id);
-    edge._private.data.name = linkdata[i].text;
+    edge._private.data.name = linkdata[i].name;
+    edge._private.data.body = linkdata[i].body;
   }
 }
 
@@ -158,7 +165,8 @@ function getEdgeInfo(edgearr){
       'id': edgearr[i].id(),
       'source': edgearr[i]._private.data.source,
       'target': edgearr[i]._private.data.target,
-      'name': edgearr[i]._private.data.name
+      'name': edgearr[i]._private.data.name,
+      'body': edgearr[i]._private.data.body,
     //  { data: { id: '0', source: 'n1', target: 'n2', name: "Go East" } },
     });  
   }
